@@ -1,0 +1,17 @@
+<resource>
+    <name>phone</name>
+    <type>script</type>
+
+    <!-- Client -->
+    <script src="client.lua" type="client" />
+
+    <!-- HTML -->
+    <file src="iphone_ui.html" />
+
+    <!-- System scripts -->
+    <script src="system_calls.lua" type="server" />
+    <script src="system_sms.lua" type="server" />
+    <script src="system_camera.lua" type="server" />
+    <script src="system_sim.lua" type="server" />
+    <script src="system_settings.lua" type="server" />
+</resource>
