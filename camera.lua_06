@@ -1,0 +1,25 @@
+-- تشغيل الكاميرا
+function openCamera(player, isFront)
+    -- isFront = true → كاميرا أمامية، false → خلفية
+    if isFront then
+        outputChatBox("تم فتح الكاميرا الأمامية.", player)
+    else
+        outputChatBox("تم فتح الكاميرا الخلفية.", player)
+    end
+
+    -- هنا تضع الكود الخاص بعرض الكاميرا على واجهة اللعبة
+end
+
+-- التقاط صورة
+function takePhoto(player, isFront)
+    -- هنا يمكنك وضع كود لحفظ الصورة على السيرفر أو في قاعدة البيانات
+    local cameraType = isFront and "أمامية" or "خلفية"
+    outputChatBox("تم التقاط صورة بالكاميرا " .. cameraType, player)
+end
+
+-- تبديل الكاميرا بين أمامية وخلفية
+function switchCamera(player, currentFront)
+    local newFront = not currentFront
+    openCamera(player, newFront)
+    return newFront
+end
