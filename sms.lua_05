@@ -1,0 +1,37 @@
+-- التحقق من الشريحة قبل إرسال الرسالة
+function canSendSMS(playerID)
+    if hasActiveSim(playerID) then
+        return true
+    else
+        outputChatBox("لا يمكنك إرسال رسالة بدون شريحة مفعلة!", getPlayerFromID(playerID))
+        return false
+    end
+end
+
+-- إرسال رسالة نصية
+function sendSMS(senderID, receiverNumber, message)
+    if not canSendSMS(senderID) then return end
+
+    -- البحث عن اللاعب المستقبل بالرقم
+    local query = dbQuery("SELECT player_id FROM players_phone WHERE phone_number = ?", receiverNumber)
+    local result = dbPoll(query, -1)
+
+    if #result == 0 then
+        outputChatBox("الرقم غير موجود!", getPlayerFromID(senderID))
+        return
+    end
+
+    local receiverID = result[1].player_id
+
+    if not hasActiveSim(receiverID) then
+        outputChatBox("اللاعب المستقبل ليس لديه شريحة مفعلة!", getPlayerFromID(senderID))
+        return
+    end
+
+    -- تخزين الرسالة في قاعدة البيانات (اختياري)
+    dbExec("INSERT INTO messages (sender_id, receiver_id, message_text) VALUES (?, ?, ?)", senderID, receiverID, message)
+
+    -- إخطار المرسل والمستقبل
+    outputChatBox("تم إرسال الرسالة إلى الرقم: " .. receiverNumber, getPlayerFromID(senderID))
+    outputChatBox("وصلتك رسالة من الرقم: " .. getPhoneNumber(senderID), getPlayerFromID(receiverID))
+end
