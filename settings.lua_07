@@ -1,0 +1,40 @@
+-- جلب إعدادات اللاعب من قاعدة البيانات
+function getPlayerSettings(playerID)
+    local query = dbQuery("SELECT settings FROM players_phone WHERE player_id = ?", playerID)
+    local result = dbPoll(query, -1)
+    if #result > 0 then
+        return fromJSON(result[1].settings) or {}
+    end
+    return {}
+end
+
+-- حفظ إعدادات اللاعب في قاعدة البيانات
+function savePlayerSettings(playerID, settingsTable)
+    local jsonSettings = toJSON(settingsTable)
+    dbExec("UPDATE players_phone SET settings = ? WHERE player_id = ?", jsonSettings, playerID)
+end
+
+-- تغيير نغمة الرنين
+function setRingtone(playerID, ringtone)
+    local settings = getPlayerSettings(playerID)
+    settings.ringtone = ringtone
+    savePlayerSettings(playerID, settings)
+    outputChatBox("تم تغيير نغمة الرنين إلى: " .. ringtone, getPlayerFromID(playerID))
+end
+
+-- تغيير خلفية التليفون
+function setWallpaper(playerID, wallpaper)
+    local settings = getPlayerSettings(playerID)
+    settings.wallpaper = wallpaper
+    savePlayerSettings(playerID, settings)
+    outputChatBox("تم تغيير خلفية التليفون.", getPlayerFromID(playerID))
+end
+
+-- تفعيل/إيقاف صوت المكالمات
+function toggleCallSound(playerID, enable)
+    local settings = getPlayerSettings(playerID)
+    settings.callSound = enable
+    savePlayerSettings(playerID, settings)
+    local status = enable and "مفعل" or "معطل"
+    outputChatBox("تم " .. status .. " صوت المكالمات.", getPlayerFromID(playerID))
+end
