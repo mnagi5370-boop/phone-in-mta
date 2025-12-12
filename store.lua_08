@@ -1,0 +1,36 @@
+-- جلب مخزون اللاعب من قاعدة البيانات
+function getPlayerInventory(playerID)
+    local query = dbQuery("SELECT inventory FROM players_phone WHERE player_id = ?", playerID)
+    local result = dbPoll(query, -1)
+    if #result > 0 then
+        return fromJSON(result[1].inventory) or {}
+    end
+    return {}
+end
+
+-- حفظ مشتريات اللاعب
+function savePlayerInventory(playerID, inventoryTable)
+    local jsonInventory = toJSON(inventoryTable)
+    dbExec("UPDATE players_phone SET inventory = ? WHERE player_id = ?", jsonInventory, playerID)
+end
+
+-- شراء منتج من المتجر
+function buyItem(playerID, itemName)
+    local inventory = getPlayerInventory(playerID)
+
+    -- تحقق إذا المنتج موجود مسبقًا
+    if inventory[itemName] then
+        outputChatBox("لقد اشتريت هذا المنتج مسبقًا.", getPlayerFromID(playerID))
+        return
+    end
+
+    -- هنا يمكن إضافة خصم الرصيد أو التحقق من النقود داخل اللعبة
+    inventory[itemName] = true
+    savePlayerInventory(playerID, inventory)
+    outputChatBox("تم شراء المنتج: " .. itemName, getPlayerFromID(playerID))
+
+    -- مثال: إذا المنتج هو شريحة، فعلها مباشرة
+    if itemName == "SIM" then
+        activateSim(playerID)
+    end
+end
