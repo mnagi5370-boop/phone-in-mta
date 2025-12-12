@@ -1,0 +1,57 @@
+-- مثال لفتح التليفون عند الضغط على زر معين
+bindKey("F1", "down", function(player)
+    openPhone(player)
+end)
+
+-- دالة فتح التليفون وربط كل الشاشات
+function openPhone(player)
+    outputChatBox("تم فتح التليفون.", player)
+
+    -- مثال لعرض القوائم
+    -- يمكنك ربط كل دالة بالشاشة المناسبة في GUI أو HTML
+    -- الرسائل
+    addCommandHandler("sms", function(_, targetNumber, ...)
+        local message = table.concat({...}, " ")
+        sendSMS(getPlayerID(player), targetNumber, message)
+    end)
+
+    -- المكالمات
+    addCommandHandler("call", function(_, targetNumber)
+        startCall(getPlayerID(player), targetNumber)
+    end)
+
+    addCommandHandler("endcall", function()
+        -- مثال: هنا تحتاج تعريف من ينهي المكالمة
+        endCall(getPlayerID(player), getCurrentCallPartner(getPlayerID(player)))
+    end)
+
+    -- الكاميرا
+    addCommandHandler("camera", function(_, front)
+        local isFront = front == "front"
+        openCamera(player, isFront)
+    end)
+
+    -- الإعدادات
+    addCommandHandler("setringtone", function(_, ringtone)
+        setRingtone(getPlayerID(player), ringtone)
+    end)
+
+    addCommandHandler("setwallpaper", function(_, wallpaper)
+        setWallpaper(getPlayerID(player), wallpaper)
+    end)
+
+    addCommandHandler("togglecall", function(_, enable)
+        toggleCallSound(getPlayerID(player), enable == "on")
+    end)
+
+    -- المتجر
+    addCommandHandler("buy", function(_, itemName)
+        buyItem(getPlayerID(player), itemName)
+    end)
+end
+
+-- دالة مساعدة للحصول على playerID من الكائن player
+function getPlayerID(player)
+    -- هنا يمكن استخدام الـ database أو الـ element ID
+    return getElementData(player, "playerID")
+end
