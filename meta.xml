@@ -9,14 +9,11 @@
     <file src="iphone_ui.html" />
 
     <!-- Server scripts -->
-    <script src="main.lua_09" type="server" />
-    <script src="calls.lua_04" type="server" />
-    <script src="sms.lua_05" type="server" />
-    <script src="camera.lua_06" type="server" />
-    <script src="sim_card.lua_03" type="server" />
-    <script src="settings.lua_07" type="server" />
-    <script src="store.lua_08" type="server" />
-    <script src="generate_phone.lua_02" type="server" />
+    
+    <script src="calls.lua" type="server" />
+    <script src="sms.lua" type="server" />
+    <script src="sim_card.lua" type="server" />
+    <script src="generate_phone.lua" type="server" />
 
     <!-- Database -->
     <file src="database.sql_01" />
