@@ -11,9 +11,6 @@
     <!-- Server scripts -->
     
     <script src="calls.lua" type="server" />
-    <script src="sms.lua" type="server" />
-    <script src="sim_card.lua" type="server" />
-    <script src="generate_phone.lua" type="server" />
 
     <!-- Database -->
     <file src="database.sql_01" />
