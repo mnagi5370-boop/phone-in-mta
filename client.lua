@@ -8,7 +8,8 @@ function togglePhone()
         phoneBrowser = guiCreateBrowser(0, 0, 1, 1, true, true, false)
         addEventHandler("onClientBrowserCreated", phoneBrowser,
             function()
-                loadBrowserURL(source, "http://localhost/iphone_ui.html")
+                -- تم تعديل هذا السطر لتصحيح الخطأ
+                loadBrowserURL(phoneBrowser, "http://localhost/iphone_ui.html")
             end
         )
     end
@@ -20,7 +21,7 @@ end
 
 bindKey("m", "down", togglePhone) -- M تفتح التليفون
 
--- استقبال أحداث من السيرفر (Calls, SMS, Camera, SIM, Settings, Store)
+-- استقبال أحداث من السيرفر (Calls, SMS)
 addEvent("phone:receiveSMS", true)
 addEventHandler("phone:receiveSMS", root, function(fromNumber, message)
     if phoneBrowser then
@@ -35,7 +36,7 @@ addEventHandler("phone:receiveCall", root, function(fromNumber)
     end
 end)
 
--- مثال لإرسال حدث للسيرفر من HTML
+-- إرسال أحداث للسيرفر من HTML
 function sendSMSToServer(toNumber, message)
     triggerServerEvent("phone:sendSMS", resourceRoot, toNumber, message)
 end
