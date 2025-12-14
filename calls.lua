@@ -1,15 +1,5 @@
 local activeCalls = {}
 
--- ====== إعداد بيانات تجريبية (عشان يشتغل فوراً) ======
-addEventHandler("onPlayerJoin", root,
-    function()
-        local number = math.random(100000, 999999)
-        setElementData(source, "phone:number", tostring(number))
-        setElementData(source, "phone:sim", true)
-        outputChatBox("📱 رقمك: "..number, source, 0, 255, 0)
-    end
-)
-
 -- ====== فحص الشريحة ======
 function hasActiveSim(player)
     return getElementData(player, "phone:sim") == true
@@ -72,7 +62,9 @@ function endCall(player)
     activeCalls[target] = nil
 
     outputChatBox("📴 أنهيت المكالمة.", player, 255, 255, 0)
-    outputChatBox("📴 الطرف الآخر أنهى المكالمة.", target, 255, 255, 0)
+    if isElement(target) then
+        outputChatBox("📴 الطرف الآخر أنهى المكالمة.", target, 255, 255, 0)
+    end
 end
 
 -- ====== شات المكالمة ======
@@ -86,7 +78,9 @@ addEventHandler("onPlayerChat", root,
         cancelEvent()
 
         outputChatBox("📱 أنت: "..msg, source, 200, 200, 255)
-        outputChatBox("📱 المتصل: "..msg, target, 200, 255, 200)
+        if isElement(target) then
+            outputChatBox("📱 المتصل: "..msg, target, 200, 255, 200)
+        end
     end
 )
 
@@ -106,3 +100,15 @@ addCommandHandler("hangup",
         endCall(player)
     end
 )
+
+-- ====== إنهاء المكالمات عند خروج اللاعب ======
+addEventHandler("onPlayerQuit", root, function()
+    local target = activeCalls[source]
+    if target then
+        activeCalls[source] = nil
+        activeCalls[target] = nil
+        if isElement(target) then
+            outputChatBox("📴 الطرف الآخر خرج من السيرفر، تم إنهاء المكالمة.", target, 255, 255, 0)
+        end
+    end
+end)
